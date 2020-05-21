@@ -1,0 +1,32 @@
+%导入变量
+Year=xlsread('能源消费总量.xlsx','sheet1','a1:a27');
+Total=xlsread('能源消费总量.xlsx','sheet1','b1:b27');
+C=xlsread('能源消费总量.xlsx','sheet1','1:c27');
+O=xlsread('能源消费总量.xlsx','sheet1','d1:d27');
+G=xlsread('能源消费总量.xlsx','sheet1','e1:e27');
+T=xlsread('能源消费总量.xlsx','sheet1','f1:f27');
+%参数设置
+ft = fittype( 'fourier4' );
+opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
+opts.Display = 'Off';
+opts.Normalize = 'on';
+opts.StartPoint = [0 0 0 0 0 0 0 0 0 0.893570128989947];
+%拟合曲线，定义函数
+[Total_fit, gof_Total] = fit( Year, Total, ft, opts );
+[C_fit, gof_C] = fit( Year, C, ft, opts );
+[O_fit, gof_O] = fit( Year, O, ft, opts );
+[G_fit, gof_G] = fit( Year, G, ft, opts );
+%-----------------------------------------
+ft = fittype( 'fourier5' );
+opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
+opts.Display = 'Off';
+opts.Normalize = 'on';
+opts.StartPoint = [0 0 0 0 0 0 0 0 0 0 0 0.893570128989947];
+[T_fit, gof_T] = fit( Year, T, ft, opts );
+%进行预测
+Year_future=2019:1:2022
+Total_future=Total_fit(Year_future)
+C_future=C_fit(Year_future)
+O_future=O_fit(Year_future)
+G_future=G_fit(Year_future)
+T_future=T_fit(Year_future)%可预测任意一年，例C_2025=C_fit(2025)
